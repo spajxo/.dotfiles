@@ -17,6 +17,8 @@ Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'stanangeloff/php.vim'
 Plugin 'scrooloose/syntastic'
+Plugin 'spf13/piv'
+Plugin 'terryma/vim-multiple-cursors'
 call vundle#end()            " required
 
 
