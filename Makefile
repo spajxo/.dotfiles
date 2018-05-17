@@ -16,8 +16,10 @@ zsh:
 	ln -fs $(DOTFILES)/.zshrc $(HOME)/.zshrc
 
 tmux:
+	sudo apt install tmux
 	ln -fs $(DOTFILES)/.tmux.conf $(HOME)/.tmux.conf
 	ln -fs $(DOTFILES)/.tmux.conf.local $(HOME)/.tmux.conf.local
 
 vim:
+	sudo apt install neovim
 	ln -fs $(DOTFILES)/.vimrc $(HOME)/.vimrc
