@@ -10,6 +10,7 @@ zsh:
 	mkdir -p ~/.local/share/fonts
 	mv PowerlineSymbols.otf ~/.local/share/fonts/
 	fc-cache -vf ~/.local/share/fonts/
+	mkdir -p ~/.config/fontconfig/conf.d
 	mv 10-powerline-symbols.conf ~/.config/fontconfig/conf.d/
 	ln -fs $(DOTFILES)/.zshrc $(HOME)/.zshrc
 
