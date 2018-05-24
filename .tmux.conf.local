@@ -239,13 +239,11 @@ tmux_conf_theme_clock_style='24'
 #   really you should export VISUAL or EDITOR environment variable, see manual
 set -g status-keys vi
 set -g mode-keys vi
-set-option -s set-clipboard off
-bind -t vi-copy y copy-pipe 'xclip -in -selection clipboard'
+#set-option -s set-clipboard off
+#bind-key -t vi-copy y copy-pipe 'xclip -in -selection clipboard'
 
 # move status line to top
 #set -g status-position top
 
 # move x clipboard into tmux paste buffer
 bind C-p run "tmux set-buffer \"$(xclip -o)\"; tmux paste-buffer;"
-# # move tmux copy buffer into x clipboard
-bind C-y run "tmux save-buffer - | xclip -i -selection clipboard;"
