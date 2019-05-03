@@ -8,7 +8,7 @@
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 #ZSH_THEME="agnoster"
-ZSH_THEME="powerlevel9k/powerlevel9k"
+ZSH_THEME="robbyrussell"
 DEFAULT_USER="spajx"
 
 # Uncomment the following line to use case-sensitive completion.
@@ -53,7 +53,7 @@ DEFAULT_USER="spajx"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git colored-man-pages colorize command-not-found cp history-substring-search tmux tmuxinator composer phing symfony2)
+plugins=(git colored-man-pages colorize command-not-found cp history-substring-search tmux tmuxinator composer phing symfony2 jira docker)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -85,8 +85,12 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias zoltan="ssh digital@zoltan.local"
 alias dc="docker-compose"
+alias bender1="ssh digitalssh@bender1.tvujhosting.cz"
+alias bender2="ssh digitalssh@bender2.tvujhosting.cz"
+alias bender3="ssh digitalssh@bender3.tvujhosting.cz"
+alias zealot="ssh digitalssh@zealot.tvujhosting.cz"
+alias timmy="ssh digitalssh@timmy.tvujhosting.cz"
 
 if command -v tmux>/dev/null; then
 	[[ ! $TERM =~ screen ]] && [ -z $TMUX ] && exec tmux
