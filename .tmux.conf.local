@@ -247,3 +247,6 @@ set -g mode-keys vi
 
 # move x clipboard into tmux paste buffer
 bind C-p run "tmux set-buffer \"$(xclip -o)\"; tmux paste-buffer;"
+
+# enable mouse mode
+set -g mouse on
