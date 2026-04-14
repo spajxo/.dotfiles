@@ -1,0 +1,23 @@
+# Aliasy
+alias zj="zellij attach work --create"
+alias claudex="claude --allow-dangerously-skip-permissions --chrome"
+
+# ls → eza (pokud nainstalované)
+if command -v eza &>/dev/null; then
+    alias ls="eza"
+    alias ll="eza -la --icons --git"
+    alias la="eza -a"
+    alias lt="eza --tree --level=2"
+else
+    alias ll="ls -alF"
+    alias la="ls -A"
+fi
+
+# cat → bat (pokud nainstalované)
+command -v bat &>/dev/null && alias cat="bat --paging=never"
+
+# find → fd (pokud nainstalované)
+command -v fd &>/dev/null && alias find="fd"
+
+# du → dust (pokud nainstalované)
+command -v dust &>/dev/null && alias du="dust"

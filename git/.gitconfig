@@ -1,0 +1,27 @@
+[user]
+    email = pavel.stejskal@digital.cz
+    name = Pavel Stejskal
+[init]
+    defaultBranch = main
+[pull]
+    rebase = true
+[push]
+    autoSetupRemote = true
+[core]
+    editor = hx
+    pager = delta
+[interactive]
+    diffFilter = delta --color-only
+[delta]
+    navigate = true
+    side-by-side = true
+[diff]
+    algorithm = histogram
+    colorMoved = default
+[merge]
+    conflictstyle = zdiff3
+[rerere]
+    enabled = true
+[alias]
+    st = status -sb
+    lg = log --oneline --graph --all --decorate

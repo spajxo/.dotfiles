@@ -1,26 +1,29 @@
-DOTFILES := $(shell pwd)
+STOW_PACKAGES = zsh git helix kitty starship zellij btop claude
 
-install: zsh tmux vim
+.PHONY: install stow unstow tools apt omz fonts
 
-zsh: 
-	sudo apt install zsh
-	rm -rf ~/.oh-my-zsh
-	sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-	git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/themes/powerlevel9k
-	wget https://github.com/powerline/powerline/raw/develop/font/PowerlineSymbols.otf
-	wget https://github.com/powerline/powerline/raw/develop/font/10-powerline-symbols.conf
-	mkdir -p ~/.local/share/fonts
-	mv PowerlineSymbols.otf ~/.local/share/fonts/
-	fc-cache -vf ~/.local/share/fonts/
-	mkdir -p ~/.config/fontconfig/conf.d
-	mv 10-powerline-symbols.conf ~/.config/fontconfig/conf.d/
-	ln -fs $(DOTFILES)/.zshrc $(HOME)/.zshrc
+install: apt omz fonts tools stow
+	@echo "Hotovo! Otevři nový terminál."
 
-tmux:
-	sudo apt install tmux
-	ln -fs $(DOTFILES)/.tmux.conf $(HOME)/.tmux.conf
-	ln -fs $(DOTFILES)/.tmux.conf.local $(HOME)/.tmux.conf.local
+apt:
+	./install.sh apt
 
-vim:
-	sudo apt install neovim
-	ln -fs $(DOTFILES)/.vimrc $(HOME)/.vimrc
+omz:
+	./install.sh omz
+
+fonts:
+	./install.sh fonts
+
+tools:
+	./install.sh tools
+
+stow:
+	@command -v stow >/dev/null || { echo "Instaluji stow..."; sudo apt install -y stow; }
+	stow -v -t $(HOME) $(STOW_PACKAGES)
+
+unstow:
+	stow -D -v -t $(HOME) $(STOW_PACKAGES)
+
+adopt:
+	@command -v stow >/dev/null || { echo "Instaluji stow..."; sudo apt install -y stow; }
+	stow --adopt -v -t $(HOME) $(STOW_PACKAGES)
