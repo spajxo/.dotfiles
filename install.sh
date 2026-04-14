@@ -202,6 +202,31 @@ install_delta() {
     fi
 }
 
+install_glow() {
+    if ! command -v glow &>/dev/null; then
+        info "Instalace glow"
+        local version
+        version=$(curl -s https://api.github.com/repos/charmbracelet/glow/releases/latest | grep '"tag_name"' | sed -E 's/.*"v([^"]+)".*/\1/')
+        curl -sSfL "https://github.com/charmbracelet/glow/releases/download/v${version}/glow_${version}_Linux_x86_64.tar.gz" | tar xz -C /tmp --strip-components=1 "glow_${version}_Linux_x86_64/glow"
+        mv /tmp/glow "$HOME/.local/bin/glow"
+        chmod +x "$HOME/.local/bin/glow"
+        ok "glow $version nainstalován"
+    else
+        ok "glow již nainstalován ($(glow --version 2>/dev/null || echo 'installed'))"
+    fi
+}
+
+install_httpie() {
+    if ! command -v http &>/dev/null; then
+        info "Instalace httpie"
+        sudo apt install -y -qq httpie 2>/dev/null || {
+            warn "httpie není v apt — zkus: pip install httpie"
+        }
+    else
+        ok "httpie již nainstalován ($(http --version 2>/dev/null || echo 'installed'))"
+    fi
+}
+
 # === 7. Stow symlinky ===
 stow_packages() {
     info "Vytváření symlinků pomocí stow"
@@ -232,7 +257,7 @@ main() {
         zsh)      set_zsh ;;
         omz)      install_omz ;;
         fonts)    install_nerd_font ;;
-        tools)    install_p10k; install_zoxide; install_lazydocker; install_dsdev; install_claude; install_zellij; install_lazygit; install_eza; install_delta; install_dust ;;
+        tools)    install_p10k; install_zoxide; install_lazydocker; install_dsdev; install_claude; install_zellij; install_lazygit; install_eza; install_delta; install_dust; install_glow; install_httpie ;;
         stow)     stow_packages "${2:-}" ;;
         all)
             install_apt
@@ -249,6 +274,8 @@ main() {
             install_eza
             install_delta
             install_dust
+            install_glow
+            install_httpie
             stow_packages "${2:-}"
             echo ""
             ok "Hotovo! Otevři nový terminál. Spusť 'p10k configure' pro nastavení promptu."

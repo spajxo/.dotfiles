@@ -1,4 +1,4 @@
-STOW_PACKAGES = zsh git helix kitty starship zellij btop claude
+STOW_PACKAGES = zsh git helix kitty zellij btop claude
 
 .PHONY: install stow unstow tools apt omz fonts
 
