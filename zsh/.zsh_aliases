@@ -1,6 +1,6 @@
 # Aliasy
 alias zj="zellij attach work --create"
-alias claudex="claude --allow-dangerously-skip-permissions --chrome"
+alias claudex="claude --enable-auto-mode"
 
 # ls → eza (pokud nainstalované)
 if command -v eza &>/dev/null; then
@@ -21,3 +21,15 @@ command -v fd &>/dev/null && alias find="fd"
 
 # du → dust (pokud nainstalované)
 command -v dust &>/dev/null && alias du="dust"
+
+# tail s barevným zvýrazněním log levelů
+# lnav je lepší alternativa pro interaktivní prohlížení: https://lnav.org
+ctail() {
+    tail -f "$@" | awk '
+        /ERROR|CRITICAL|FATAL/ { print "\033[1;31m" $0 "\033[0m"; next }
+        /WARN/                  { print "\033[1;33m" $0 "\033[0m"; next }
+        /INFO/                  { print "\033[0;32m" $0 "\033[0m"; next }
+        /DEBUG/                 { print "\033[0;34m" $0 "\033[0m"; next }
+                                { print }
+    '
+}
