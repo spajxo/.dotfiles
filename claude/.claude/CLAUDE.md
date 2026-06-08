@@ -5,6 +5,8 @@
 
 **GitLab MR:** Vždy `--assignee @me` a `--remove-source-branch`.
 
+**Commit messages:** Always in English.
+
 ## DevProxy
 
 Lokální HTTPS reverse proxy (nginx v Dockeru). Doména: `*.dsdev.digital` (wildcard DNS → 127.0.0.1, funguje i mezi kontejnery).

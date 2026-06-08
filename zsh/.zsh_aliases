@@ -1,6 +1,8 @@
 # Aliasy
 alias zj="zellij attach work --create"
-alias claudex="claude --enable-auto-mode"
+alias opus="claude --model=default"
+alias opus46="claude --model=claude-opus-4-6"
+alias sonnet="claude --model=claude-sonnet-4-6"
 
 # ls → eza (pokud nainstalované)
 if command -v eza &>/dev/null; then

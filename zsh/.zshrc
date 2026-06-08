@@ -69,3 +69,7 @@ precmd_functions+=(_zellij_tab_prompt)
 
 # === Machine-local overrides (netrackováno) ===
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/spajxo/.local/bin:$PATH"
