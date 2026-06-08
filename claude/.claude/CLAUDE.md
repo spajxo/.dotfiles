@@ -88,15 +88,7 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 - Do NOT use me for: routing, retries, deterministic transforms.
 - Deterministic logic belongs in code, not in a prompt.
 
-### 6. Token budgets are not advisory
-
-**Surface the breach. Do not silently overrun.**
-
-- Per-task target: ~4,000 tokens. Per-session target: ~30,000 tokens.
-- If approaching budget, summarize state and start fresh rather than ploughing on.
-- Flag the breach explicitly — don't hide it behind a longer response.
-
-### 7. Surface conflicts, don't average them
+### 6. Surface conflicts, don't average them
 
 **If two patterns contradict, pick one. Explain why.**
 
@@ -104,7 +96,7 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 - Flag the loser for cleanup — don't silently leave both.
 - Never blend conflicting patterns into a third hybrid.
 
-### 8. Read before you write
+### 7. Read before you write
 
 **"Looks orthogonal" is dangerous.**
 
@@ -114,7 +106,7 @@ Before adding code:
 - Read shared utilities you might be duplicating.
 - If unsure why code is structured a particular way, ask — don't guess.
 
-### 9. Tests verify intent, not just behavior
+### 8. Tests verify intent, not just behavior
 
 **A test that can't fail when business logic changes is wrong.**
 
@@ -122,7 +114,7 @@ Before adding code:
 - Snapshot/assert-anything tests that pass regardless of intent are noise.
 - If a test wouldn't catch a real bug, rewrite it or delete it.
 
-### 10. Checkpoint after every significant step
+### 9. Checkpoint after every significant step
 
 **Don't continue from a state you can't describe back.**
 
@@ -130,7 +122,7 @@ Before adding code:
 - If you lose track, stop and restate before doing more.
 - Checkpoints are how multi-step work stays recoverable.
 
-### 11. Match the codebase's conventions, even if you disagree
+### 10. Match the codebase's conventions, even if you disagree
 
 **Conformance > taste inside the codebase.**
 
@@ -138,7 +130,7 @@ Before adding code:
 - If a convention is genuinely harmful, surface it as a separate concern.
 - Don't fork silently — a quiet "improvement" is just inconsistency.
 
-### 12. Fail loud
+### 11. Fail loud
 
 **Default to surfacing uncertainty, not hiding it.**
 
