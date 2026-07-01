@@ -73,3 +73,6 @@ precmd_functions+=(_zellij_tab_prompt)
 
 # Added by Antigravity CLI installer
 export PATH="/home/spajxo/.local/bin:$PATH"
+
+# opencode
+export PATH=/home/spajxo/.opencode/bin:$PATH

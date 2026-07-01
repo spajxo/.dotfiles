@@ -11,11 +11,16 @@ ask()   { read -rp $'\033[1;35m[?]\033[0m     '"$* [y/N] " ans; [[ "$ans" =~ ^[Y
 
 # === 1. Systémové balíčky ===
 install_apt() {
-    local pkgs=(zsh stow btop ripgrep fzf bat fd-find git curl wget)
+    local pkgs=(zsh stow btop ripgrep fzf bat fd-find tree git curl wget)
     info "Instalace apt balíčků: ${pkgs[*]}"
     sudo apt update -qq
     sudo apt install -y -qq "${pkgs[@]}"
     ok "Apt balíčky nainstalovány"
+
+    # fd-find a bat mají na Debianu/Ubuntu jiný název binárky (kolize se stávajícími balíčky)
+    mkdir -p "$HOME/.local/bin"
+    command -v fdfind &>/dev/null && ln -sf "$(command -v fdfind)" "$HOME/.local/bin/fd"
+    command -v batcat &>/dev/null && ln -sf "$(command -v batcat)" "$HOME/.local/bin/bat"
 }
 
 # === 2. Změna login shellu ===
