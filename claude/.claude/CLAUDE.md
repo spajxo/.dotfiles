@@ -3,22 +3,22 @@
 - `/home/spajxo/Projects/git.digital.cz` - GitLab (používej `glab` skill)
 - `/home/spajxo/Projects/github.com` - GitHub (používej `gh`)
 
-**GitLab MR:** Vždy `--assignee @me` a `--remove-source-branch`.
+**GitLab MR:** Vždy `--reviewer @me` (ne assignee — kvůli code-review funkcím v GitLabu) a `--remove-source-branch`.
 
 **Commit messages:** Always in English.
 
 ## DevProxy
 
-Lokální HTTPS reverse proxy (nginx v Dockeru). Doména: `*.dsdev.digital` (wildcard DNS → 127.0.0.1, funguje i mezi kontejnery).
-
-Docker Compose: `VIRTUAL_HOST`, `VIRTUAL_PORT`, network `proxy_network` (external).
-
-Příkazy: `dsdev proxy start|stop|list|status|update|cert-install`
+Lokální HTTPS reverse proxy (nginx v Dockeru), doména `*.dsdev.digital` (wildcard → 127.0.0.1). Compose: `VIRTUAL_HOST`, `VIRTUAL_PORT`, external network `proxy_network`. Ovládání: `dsdev proxy …`.
 
 ## Atlassian
 
 - **Site:** digitalcz.atlassian.net
 - **Cloud ID:** 6b2c79e1-f26a-48a5-9145-d9d5c553993e
+
+## Portainer (`porty`)
+
+Portainer používáme pro většinu projektů (testing i produkce, pár výjimek). `porty` = read-only CLI (jen GET/HEAD — nic nemění), na ověření stavu stacků/kontejnerů. Katalog příkazů, config a flagy: `porty guide` (lidsky) / `porty guide --json` (pro agenty).
 
 ## Coding Guidelines
 
@@ -137,3 +137,56 @@ Before adding code:
 - "Completed" is wrong if anything was skipped silently.
 - "Tests pass" is wrong if any were skipped or marked xfail without note.
 - Partial success is not success — name what didn't work.
+
+### 12. A question is not a task
+
+**When I ask whether something is possible, answer first — don't implement.**
+
+- Phrasing like "dá se to udělat?", "je to možné?", "existuje...?" is a request for
+  information, not a mandate to act. Same for English equivalents ("can this be
+  done?", "is there a way to...?").
+- Give a direct answer (ANO/NE + brief reasoning). Do whatever research is needed to
+  answer confidently, but stop there — don't build, configure, or edit files as part
+  of answering.
+- Only implement after I've explicitly said to go ahead ("udělej to", "nastav to",
+  "implementuj", "pojď na to").
+- It's fine to offer the next step ("Ano, jde to takto — mám to i nastavit?"), but
+  wait for confirmation before acting on it.
+
+### 13. Sync before you analyze — never reason from a stale branch
+
+**A local checkout can be behind `origin`. Verify freshness before you draw conclusions from it.**
+
+- Before reading files to reason about "current state" (audits, reviews, drift checks,
+  "what's done"), run `git fetch` and check how far the local branch is behind
+  (`git status -sb` / `git log --oneline HEAD..origin/<branch>`). If behind, sync or read
+  from `origin/<branch>` (`git show origin/main:path`) — don't analyze the stale tree.
+- Especially when cross-referencing local files against live remote data (GitLab/GitHub API,
+  deployed state): both sides must be the same revision, or you'll chase phantom drift.
+- New worktrees branch from `origin` (fresh) — if the local checkout differs, that's the tell
+  the local branch is stale. Trust `origin`, not the old working copy.
+
+### 14. Comment sparingly — code should read itself
+
+**Comments explain WHY, not WHAT. If the code already says it, don't repeat it.**
+
+- No comments that restate the code (`// increment i`, `// loop over users`,
+  `i++ // add one`). If a reader who knows the language can see it from the line,
+  the comment is noise.
+- No narration comments that walk through the steps (`// first we fetch the data`,
+  `// now validate`, `// finally return`). Structure and naming carry that.
+- No diff/changelog comments about what you just did (`// added error handling`,
+  `// changed to async`, `// new`). Git history is the changelog, not the source.
+- No header/banner blocks or section dividers that weren't already the file's style.
+- Prefer self-documenting code over a comment: a well-named function, variable, or
+  constant beats a comment that explains a bad name. Fix the name first.
+- When you do document, document the API surface (public contract, params, invariants),
+  not the implementation details — those change and the comment rots.
+- Business decisions and rationale belong in the commit body or the docs, not in an
+  inline comment. The source is not a changelog or a decision log.
+- DO write a comment when it earns its place: a non-obvious WHY, a gotcha, a
+  workaround with a reason, a link to an issue/spec, or a warning about a
+  surprising constraint. Rare and load-bearing beats frequent and obvious.
+- Match the file's existing comment density. If the surrounding code is sparse,
+  stay sparse — don't be the one function that's over-annotated.
+- When unsure whether a comment earns its place, cut it. The default is no comment.
