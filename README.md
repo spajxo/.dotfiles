@@ -16,11 +16,11 @@ cd ~/.dotfiles
 
 | Package | Soubory | Popis |
 |---------|---------|-------|
-| `zsh` | `.zshrc`, `.zsh_aliases` | Zsh + Oh-My-Zsh + Starship prompt |
+| `bash` | `.bashrc`, `.bash_aliases` | Bash + Starship prompt |
+| `starship` | `.config/starship.toml` | Starship prompt |
 | `git` | `.gitconfig` | Git konfigurace, aliasy |
 | `helix` | `.config/helix/config.toml` | Helix editor |
 | `kitty` | `.config/kitty/kitty.conf` | Kitty terminál |
-| `starship` | `.config/starship.toml` | Starship prompt |
 | `zellij` | `.config/zellij/config.kdl` | Zellij terminal multiplexer |
 | `btop` | `.config/btop/btop.conf` | Btop resource monitor |
 | `claude` | `.claude/CLAUDE.md`, `.claude/keybindings.json` | Claude Code |
@@ -28,19 +28,19 @@ cd ~/.dotfiles
 ## Použití
 
 ```bash
-make install    # Plná instalace (apt + omz + tools + stow)
+make install    # Plná instalace (apt + tools + stow)
 make stow       # Jen vytvořit symlinky
 make unstow     # Odstranit symlinky
 make adopt      # Stow --adopt (přesune existující soubory do repo)
 make tools      # Nainstalovat CLI nástroje (zoxide, lazydocker, dsdev, claude)
-make optional   # Volitelné nástroje (starship, eza, delta, zellij, lazygit)
+make optional   # Volitelné nástroje (starship, delta, zellij, lazygit)
 ```
 
 Jednotlivé sekce install scriptu:
 
 ```bash
 ./install.sh apt       # Systémové balíčky
-./install.sh omz       # Oh-My-Zsh + external pluginy
+./install.sh bash      # Bash jako login shell (chsh)
 ./install.sh tools     # CLI nástroje
 ./install.sh optional  # Volitelné nástroje (interaktivní)
 ./install.sh stow      # Symlinky
@@ -55,9 +55,9 @@ Jednotlivé sekce install scriptu:
 
 ## Machine-local overrides
 
-Soubor `~/.zshrc.local` (netrackovaný) pro machine-specific nastavení:
+Soubor `~/.bashrc.local` (netrackovaný) pro machine-specific nastavení:
 
-```zsh
+```bash
 export SSH_AUTH_SOCK=/home/user/.bitwarden-ssh-agent.sock
 export JAVA_HOME="/snap/android-studio/209/jbr"
 export ANDROID_HOME="$HOME/Android/Sdk"

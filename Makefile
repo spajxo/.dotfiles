@@ -1,15 +1,12 @@
-STOW_PACKAGES = zsh git helix kitty zellij btop claude
+STOW_PACKAGES = bash starship git helix kitty zellij btop claude
 
-.PHONY: install stow unstow tools apt omz fonts
+.PHONY: install stow unstow tools apt fonts
 
-install: apt omz fonts tools stow
+install: apt fonts tools stow
 	@echo "Hotovo! Otevři nový terminál."
 
 apt:
 	./install.sh apt
-
-omz:
-	./install.sh omz
 
 fonts:
 	./install.sh fonts

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
-STOW_PACKAGES=(zsh git helix kitty zellij btop claude)
+STOW_PACKAGES=(bash starship git helix kitty zellij btop claude)
 
 info()  { echo -e "\033[1;34m[info]\033[0m  $*"; }
 ok()    { echo -e "\033[1;32m[ok]\033[0m    $*"; }
@@ -11,58 +11,25 @@ ask()   { read -rp $'\033[1;35m[?]\033[0m     '"$* [y/N] " ans; [[ "$ans" =~ ^[Y
 
 # === 1. Systémové balíčky ===
 install_apt() {
-    local pkgs=(zsh stow btop ripgrep fzf bat fd-find tree git curl wget)
+    local pkgs=(bash-completion stow btop ripgrep fzf tree git curl wget)
     info "Instalace apt balíčků: ${pkgs[*]}"
     sudo apt update -qq
     sudo apt install -y -qq "${pkgs[@]}"
     ok "Apt balíčky nainstalovány"
-
-    # fd-find a bat mají na Debianu/Ubuntu jiný název binárky (kolize se stávajícími balíčky)
-    mkdir -p "$HOME/.local/bin"
-    command -v fdfind &>/dev/null && ln -sf "$(command -v fdfind)" "$HOME/.local/bin/fd"
-    command -v batcat &>/dev/null && ln -sf "$(command -v batcat)" "$HOME/.local/bin/bat"
 }
 
 # === 2. Změna login shellu ===
-set_zsh() {
-    if [[ "$SHELL" != */zsh ]]; then
-        info "Změna login shellu na zsh"
-        chsh -s "$(which zsh)"
-        ok "Login shell změněn na zsh (projeví se po novém přihlášení)"
+set_bash() {
+    if [[ "$SHELL" != */bash ]]; then
+        info "Změna login shellu na bash"
+        chsh -s "$(which bash)"
+        ok "Login shell změněn na bash (projeví se po novém přihlášení)"
     else
-        ok "Zsh je už výchozí shell"
+        ok "Bash je už výchozí shell"
     fi
 }
 
-# === 3. Oh-My-Zsh + external pluginy ===
-install_omz() {
-    if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
-        info "Instalace Oh-My-Zsh"
-        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
-        ok "Oh-My-Zsh nainstalován"
-    else
-        ok "Oh-My-Zsh již existuje"
-    fi
-
-    local ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
-    local plugins=(
-        "zsh-users/zsh-autosuggestions"
-        "zsh-users/zsh-syntax-highlighting"
-        "zsh-users/zsh-history-substring-search"
-    )
-    for plugin in "${plugins[@]}"; do
-        local name="${plugin##*/}"
-        local dest="$ZSH_CUSTOM/plugins/$name"
-        if [[ ! -d "$dest" ]]; then
-            info "Klonování $name"
-            git clone "https://github.com/$plugin.git" "$dest"
-        else
-            ok "$name již existuje"
-        fi
-    done
-}
-
-# === 4. Nerd Font ===
+# === 3. Nerd Font ===
 install_nerd_font() {
     if fc-list | grep -qi "JetBrainsMono.*Nerd"; then
         ok "JetBrainsMono Nerd Font již nainstalován"
@@ -78,14 +45,13 @@ install_nerd_font() {
 }
 
 # === 5. CLI nástroje ===
-install_p10k() {
-    local dest="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
-    if [[ ! -d "$dest" ]]; then
-        info "Instalace Powerlevel10k"
-        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$dest"
-        ok "Powerlevel10k nainstalován"
+install_starship() {
+    if ! command -v starship &>/dev/null; then
+        info "Instalace Starship"
+        curl -sSfL https://starship.rs/install.sh | sh -s -- -y -b "$HOME/.local/bin"
+        ok "Starship nainstalován"
     else
-        ok "Powerlevel10k již existuje"
+        ok "Starship již nainstalován ($(starship --version | head -1))"
     fi
 }
 
@@ -168,30 +134,6 @@ install_lazygit() {
     fi
 }
 
-install_eza() {
-    if ! command -v eza &>/dev/null; then
-        info "Instalace eza"
-        sudo apt install -y -qq eza 2>/dev/null || {
-            warn "eza není v apt — zkus: cargo install eza"
-        }
-    else
-        ok "eza již nainstalován ($(eza --version | head -1))"
-    fi
-}
-
-install_dust() {
-    if ! command -v dust &>/dev/null; then
-        info "Instalace dust"
-        local version
-        version=$(curl -s https://api.github.com/repos/bootandy/dust/releases/latest | grep '"tag_name"' | sed -E 's/.*"v([^"]+)".*/\1/')
-        curl -sSfL "https://github.com/bootandy/dust/releases/download/v${version}/dust-v${version}-x86_64-unknown-linux-gnu.tar.gz" | tar xz -C /tmp --strip-components=1 "dust-v${version}-x86_64-unknown-linux-gnu/dust"
-        mv /tmp/dust "$HOME/.local/bin/dust"
-        chmod +x "$HOME/.local/bin/dust"
-        ok "dust $version nainstalován"
-    else
-        ok "dust již nainstalován ($(dust --version))"
-    fi
-}
 
 install_delta() {
     if ! command -v delta &>/dev/null; then
@@ -259,34 +201,30 @@ main() {
 
     case "${1:-all}" in
         apt)      install_apt ;;
-        zsh)      set_zsh ;;
-        omz)      install_omz ;;
+        bash)     set_bash ;;
         fonts)    install_nerd_font ;;
-        tools)    install_p10k; install_zoxide; install_lazydocker; install_dsdev; install_claude; install_zellij; install_lazygit; install_eza; install_delta; install_dust; install_glow; install_httpie ;;
+        tools)    install_starship; install_zoxide; install_lazydocker; install_dsdev; install_claude; install_zellij; install_lazygit; install_delta; install_glow; install_httpie ;;
         stow)     stow_packages "${2:-}" ;;
         all)
             install_apt
-            set_zsh
-            install_omz
+            set_bash
             install_nerd_font
-            install_p10k
+            install_starship
             install_zoxide
             install_lazydocker
             install_dsdev
             install_claude
             install_zellij
             install_lazygit
-            install_eza
             install_delta
-            install_dust
             install_glow
             install_httpie
             stow_packages "${2:-}"
             echo ""
-            ok "Hotovo! Otevři nový terminál. Spusť 'p10k configure' pro nastavení promptu."
+            ok "Hotovo! Otevři nový terminál."
             ;;
         *)
-            echo "Použití: $0 [apt|zsh|omz|fonts|tools|stow [--adopt]|all]"
+            echo "Použití: $0 [apt|bash|fonts|tools|stow [--adopt]|all]"
             exit 1
             ;;
     esac
